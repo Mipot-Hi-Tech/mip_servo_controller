@@ -1,0 +1,8 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "TMC2130-LA")(type "KiCad")(uri "${KIPRJMOD}/lib/kicad_symbols/TMC2130-LA.kicad_sym")(options "")(descr ""))
+  (lib (name "MIPOT_MiP_Series")(type "KiCad")(uri "${KIPRJMOD}/lib/kicad_symbols/MIPOT_MiP_Series.kicad_sym")(options "")(descr ""))
+  (lib (name "project")(type "KiCad")(uri "${KIPRJMOD}/lib/kicad_symbols/project.kicad_sym")(options "")(descr ""))
+  (lib (name "mipot")(type "KiCad")(uri "${KIPRJMOD}/lib/kicad_symbols/mipot.kicad_sym")(options "")(descr ""))
+  (lib (name "overlay")(type "KiCad")(uri "${KIPRJMOD}/lib/overlay.kicad_sym")(options "")(descr ""))
+)

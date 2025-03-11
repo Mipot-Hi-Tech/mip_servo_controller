@@ -1,0 +1,14 @@
+/kicad/*-backups/
+/kicad/*.log
+
+#build artefacts
+/firmware/mip_trinamic/Debug*/
+/firmware/mip_trinamic/Debug_US*/
+/firmware/mip_trinamic/Debug_EU*/
+
+*.hex
+/firmware/mip_trinamic/Release/
+
+#Doxygen output
+/firmware/mip_trinamic/Doxygen/
+

@@ -1,0 +1,244 @@
+(footprint "L_Taiyo-Yuden_NR-60xx"
+	(version 20240108)
+	(generator "pcbnew")
+	(generator_version "8.0")
+	(layer "F.Cu")
+	(descr "Inductor, Taiyo Yuden, NR series, Taiyo-Yuden_NR-60xx, 6.0mmx6.0mm")
+	(tags "inductor taiyo-yuden nr smd")
+	(property "Reference" "REF**"
+		(at 0 -4 0)
+		(layer "F.SilkS")
+		(uuid "2e2db3ba-586c-4605-8ffd-68996cba8eb6")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Value" "L_Taiyo-Yuden_NR-60xx"
+		(at 0 4.5 0)
+		(layer "F.Fab")
+		(uuid "a4502837-4df3-4dc7-b995-ca26223e2f21")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Footprint" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "85b887c7-bc29-4e33-bf53-f63de4e2dd77")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "bea2c294-c9be-4f15-ad95-9ecaf06b6bb2")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "7804ace0-5c77-430c-afa3-b72683f3a1d1")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr smd)
+	(fp_line
+		(start -3.15 -3.1)
+		(end 3.15 -3.1)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "78f10721-3d8a-43a7-9a80-989a07bcd18e")
+	)
+	(fp_line
+		(start -3.15 3.1)
+		(end 3.15 3.1)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "71ac77e7-3051-40e9-a266-7ebc4b8b2213")
+	)
+	(fp_line
+		(start -3.45 -3.25)
+		(end -3.45 3.25)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "6c4f385a-58f3-45db-bc31-251a55089ecd")
+	)
+	(fp_line
+		(start -3.45 3.25)
+		(end 3.45 3.25)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "40e4d89b-f435-45bf-9579-642749b63109")
+	)
+	(fp_line
+		(start 3.45 -3.25)
+		(end -3.45 -3.25)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "7045f57c-82a9-4fc7-88ad-4a95f4b54650")
+	)
+	(fp_line
+		(start 3.45 3.25)
+		(end 3.45 -3.25)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "555bb928-0f16-45c8-a5a8-22199aa698b9")
+	)
+	(fp_line
+		(start -3 -2)
+		(end -2 -3)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "7616fa13-f41a-4a97-b960-5f5853fec40a")
+	)
+	(fp_line
+		(start -3 2)
+		(end -3 -2)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "c41ec48c-4e04-4e77-9205-4aff0bfa6fbb")
+	)
+	(fp_line
+		(start -3 2)
+		(end -2 3)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "d39a37f0-9f7d-4922-8f38-663f7b9faa0c")
+	)
+	(fp_line
+		(start -2 -3)
+		(end 2 -3)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "95751017-a407-46d6-a63d-25fc3ec37a7b")
+	)
+	(fp_line
+		(start -2 3)
+		(end 2 3)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "38386fe8-9e00-44e1-902c-e65222d520f4")
+	)
+	(fp_line
+		(start 3 -2)
+		(end 2 -3)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "834ca6e7-b0fc-4561-800a-5be7d77f9fbb")
+	)
+	(fp_line
+		(start 3 2)
+		(end 2 3)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "f929004c-480c-4ae5-b6ce-95552c531d16")
+	)
+	(fp_line
+		(start 3 2)
+		(end 3 -2)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "f8d49bb1-e0e1-425d-8bac-06c2833aa062")
+	)
+	(fp_text user "${REFERENCE}"
+		(at 0 0 0)
+		(layer "F.Fab")
+		(uuid "ad4426c3-4f3e-4194-9f6a-e47d218c1e3c")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(pad "1" smd rect
+		(at -2.35 0)
+		(size 1.6 5.7)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(uuid "cc7d4583-2f96-4afe-b129-8dc0c1bceb9f")
+	)
+	(pad "2" smd rect
+		(at 2.35 0)
+		(size 1.6 5.7)
+		(layers "F.Cu" "F.Paste" "F.Mask")
+		(uuid "eef107de-1931-46f0-8b0b-bbccd47d1e17")
+	)
+	(model "${KIPRJMOD}/lib/3dmodels/NR60XX--3DModel-STEP-56544.STEP"
+		(offset
+			(xyz 0 0 0)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz -90 0 0)
+		)
+	)
+)

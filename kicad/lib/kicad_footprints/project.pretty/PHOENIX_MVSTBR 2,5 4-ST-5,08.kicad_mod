@@ -1,0 +1,256 @@
+(footprint "PHOENIX_MVSTBR 2,5 4-ST-5,08"
+	(version 20240108)
+	(generator "pcbnew")
+	(generator_version "8.0")
+	(layer "F.Cu")
+	(property "Reference" "REF**"
+		(at 0.01 -0.5 0)
+		(unlocked yes)
+		(layer "F.SilkS")
+		(uuid "184bee32-78e1-49cb-96ef-660e10eaeeb9")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.1)
+			)
+		)
+	)
+	(property "Value" "PHOENIX_MVSTBR 2,5 4-ST-5,08"
+		(at 0 1 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(uuid "fe9cce80-3b9e-4ad3-a1d3-04cc485fae5d")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Footprint" ""
+		(at 0.01 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "b4dab7d5-f8e5-48ce-8ff4-5c10411f378d")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0.01 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "5d95cf63-0a74-4fea-9553-b44e5387ecf4")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0.01 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "50db1412-bad0-40c6-a379-1e3e3cf85e8d")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(fp_line
+		(start 0 -8.57)
+		(end 22.32 -8.57)
+		(stroke
+			(width 0.127)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "b7858d0b-efb0-4f4e-81b9-d17c506b1826")
+	)
+	(fp_line
+		(start 0 -8.57)
+		(end 22.32 -8.57)
+		(stroke
+			(width 0.127)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "b7858d0b-efb0-4f4e-81b9-d17c506b1826")
+	)
+	(fp_line
+		(start 0 0)
+		(end 0 -8.57)
+		(stroke
+			(width 0.127)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "38a46d07-7d3f-4c7c-902d-f031514974d0")
+	)
+	(fp_line
+		(start 0.05 -1)
+		(end 2.100001 -1)
+		(stroke
+			(width 0.15)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "d6517fa3-15b0-414c-821e-691ee9901ff7")
+	)
+	(fp_line
+		(start 5 -1)
+		(end 7.15 -1)
+		(stroke
+			(width 0.15)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "c4fb4c2f-d746-40c7-9018-5091082d5e51")
+	)
+	(fp_line
+		(start 10.049999 -1)
+		(end 12.3 -1)
+		(stroke
+			(width 0.15)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "9c33d2ed-9f8c-494c-a159-97d9f20baa83")
+	)
+	(fp_line
+		(start 15.199999 -1)
+		(end 17.55 -1)
+		(stroke
+			(width 0.15)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "d412cfd0-696f-4c26-a096-e7dc4b18ab49")
+	)
+	(fp_line
+		(start 15.199999 -1)
+		(end 17.55 -1)
+		(stroke
+			(width 0.15)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "d412cfd0-696f-4c26-a096-e7dc4b18ab49")
+	)
+	(fp_line
+		(start 20.424999 -1)
+		(end 22.3 -1)
+		(stroke
+			(width 0.15)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "0c112946-5495-4644-af4f-cf0cb5cd0531")
+	)
+	(fp_line
+		(start 22.32 -8.57)
+		(end 22.32 0)
+		(stroke
+			(width 0.127)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "991d1429-e33b-4d96-b037-bbc971292189")
+	)
+	(fp_line
+		(start 22.32 -8.57)
+		(end 22.32 0)
+		(stroke
+			(width 0.127)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "991d1429-e33b-4d96-b037-bbc971292189")
+	)
+	(fp_line
+		(start 22.32 0)
+		(end 0 0)
+		(stroke
+			(width 0.127)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "92a732b5-5cb1-4509-a6e5-6adf6283d725")
+	)
+	(fp_arc
+		(start 5 -1)
+		(mid 3.550001 -0.427502)
+		(end 2.100001 -1)
+		(stroke
+			(width 0.15)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "373c415f-e666-4159-8cb9-25a3ddf1d663")
+	)
+	(fp_arc
+		(start 10.049999 -1)
+		(mid 8.6 -0.427502)
+		(end 7.15 -1)
+		(stroke
+			(width 0.15)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "09a68346-9e22-45a6-8ac1-2029e37c072a")
+	)
+	(fp_arc
+		(start 15.199999 -1)
+		(mid 13.75 -0.427502)
+		(end 12.3 -1)
+		(stroke
+			(width 0.15)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "2e48e7c6-40f7-4706-8c1f-0ea02b5f1b84")
+	)
+	(fp_arc
+		(start 20.449999 -1)
+		(mid 18.999999 -0.427502)
+		(end 17.55 -1)
+		(stroke
+			(width 0.15)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "a54b1f8c-026d-4562-bade-8477a8f50538")
+	)
+	(fp_text user "${REFERENCE}"
+		(at 0 2.5 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(uuid "5419a39a-c05f-488d-b1ce-c529e88bbf39")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(model "${KIPRJMOD}/lib/3dmodels/PHOENIX_CONTACT_1792265.stp"
+		(offset
+			(xyz 1 2 12.3)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz 90 -180 -90)
+		)
+	)
+)

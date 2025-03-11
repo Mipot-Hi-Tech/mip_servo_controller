@@ -1,0 +1,6 @@
+(fp_lib_table
+  (version 7)
+  (lib (name "TMC2130-LA")(type "KiCad")(uri "${KIPRJMOD}/lib/kicad_footprints")(options "")(descr ""))
+  (lib (name "MIPOT_MiP_Series")(type "KiCad")(uri "${KIPRJMOD}/lib/kicad_footprints/MIPOT_MiP_Series.pretty")(options "")(descr ""))
+  (lib (name "project")(type "KiCad")(uri "${KIPRJMOD}/lib/kicad_footprints/project.pretty")(options "")(descr ""))
+)
