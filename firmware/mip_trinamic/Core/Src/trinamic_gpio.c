@@ -123,18 +123,18 @@ void TrinamicGPIO_Init(void)
 	(void)HAL_GPIO_Init(DRV2_DIAGNOSTIC_Port, &GPIO_InitStruct);
 
 	/* Configure GPIO pin : GPIO0_NWAKE_Pin */
-//#ifdef NWAKE0_MOD_PUSHPULL
-//	(void)HAL_GPIO_WritePin(GPIO0_NWAKE_Port, GPIO0_NWAKE_Pin, GPIO_PIN_RESET);
-//	GPIO_InitStruct.Pin   = GPIO0_NWAKE_Pin;
-//	GPIO_InitStruct.Mode  = GPIO_MODE_OUTPUT_PP;
-//	GPIO_InitStruct.Pull  = GPIO_PULLDOWN;
-//	(void)HAL_GPIO_Init(GPIO0_NWAKE_Port, &GPIO_InitStruct);
-//#else
-//	GPIO_InitStruct.Pin   = GPIO0_NWAKE_Pin;
-//	GPIO_InitStruct.Mode  = GPIO_MODE_INPUT;
-//	GPIO_InitStruct.Pull  = GPIO_NOPULL;
-//	HAL_GPIO_Init(GPIO0_NWAKE_Port, &GPIO_InitStruct);
-//#endif
+#ifdef NWAKE0_MOD_PUSHPULL
+	(void)HAL_GPIO_WritePin(GPIO0_NWAKE_Port, GPIO0_NWAKE_Pin, GPIO_PIN_RESET);
+	GPIO_InitStruct.Pin   = GPIO0_NWAKE_Pin;
+	GPIO_InitStruct.Mode  = GPIO_MODE_OUTPUT_PP;
+	GPIO_InitStruct.Pull  = GPIO_PULLDOWN;
+	(void)HAL_GPIO_Init(GPIO0_NWAKE_Port, &GPIO_InitStruct);
+#else
+	GPIO_InitStruct.Pin   = GPIO0_NWAKE_Pin;
+	GPIO_InitStruct.Mode  = GPIO_MODE_INPUT;
+	GPIO_InitStruct.Pull  = GPIO_NOPULL;
+	HAL_GPIO_Init(GPIO0_NWAKE_Port, &GPIO_InitStruct);
+#endif
     /* Configure GPIO pin : IIC_SDA_Pin IIC_SCL_Pin */
 	(void)I2cSclRelease();
 	/* Configure GPIO pin : SPI2_MOSI_Pin, SPI2_MISO_Pin, SPI2_CLK_Pin */

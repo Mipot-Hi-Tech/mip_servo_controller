@@ -92,7 +92,7 @@ static void TrinamicReadDrvStatus(TMC2130_t *driver)
 		}
 		if(driver->drv_status.reg.stallGuard != 0)
 		{
-			(void)LPUART_TxPolling("DETECTED motor srall \r\n");
+			(void)LPUART_TxPolling("DETECTED motor stall \r\n");
 		}
 	}
 }

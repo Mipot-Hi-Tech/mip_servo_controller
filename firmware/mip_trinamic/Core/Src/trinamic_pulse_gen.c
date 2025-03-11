@@ -25,7 +25,7 @@ static inline void HandleMot2StepPulseGeneration(void);
  * Variables
  ******************************************************************************/
 TIM_HandleTypeDef htim2;
-volatile uint32_t tim2_cnt   = 0;
+volatile uint32_t tim2_cnt          = 0;
 volatile uint32_t mot0_steps        = 0;
 volatile uint32_t mot1_steps        = 0;
 volatile uint32_t mot2_steps        = 0;
@@ -91,7 +91,7 @@ void TIM2_IRQHandler(void)
 {
 #ifdef TIM2_GPIO_DEBUG
 	//(void)HAL_GPIO_WritePin(GPIO0_NWAKE_Port, GPIO0_NWAKE_Pin,1);
-	(void)HAL_GPIO_TogglePin(GPIO0_NWAKE_Port, GPIO0_NWAKE_Pin);
+	//(void)HAL_GPIO_TogglePin(GPIO0_NWAKE_Port, GPIO0_NWAKE_Pin);
 	//(void)HAL_GPIO_WritePin(GPIO0_NWAKE_Port, GPIO0_NWAKE_Pin,0);
 #endif
 	HandleMot0StepPulseGeneration();

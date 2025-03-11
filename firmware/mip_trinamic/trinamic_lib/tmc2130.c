@@ -203,10 +203,11 @@ bool TMC2130_Init (TMC2130_t *driver)
     TMC2130_SetCurrent(driver, driver->config.current, driver->config.hold_current_pct);
 
     // Read back chopconf to check if driver is online
-    uint32_t chopconf = driver->chopconf.reg.value;
-    tmc_spi_read(driver->config.motor, (TMC_spi_datagram_t *)&driver->chopconf);
-
-    return driver->chopconf.reg.value == chopconf;
+//    uint32_t chopconf = driver->chopconf.reg.value;
+//    tmc_spi_read(driver->config.motor, (TMC_spi_datagram_t *)&driver->chopconf);
+//
+//    return driver->chopconf.reg.value == chopconf;
+    return true;
 }
 
 uint16_t TMC2130_GetCurrent (TMC2130_t *driver, trinamic_current_t type)

@@ -57,11 +57,13 @@ void LPUART_Init(void)
 	(void)LL_LPUART_RequestRxDataFlush(LPUART1);
 	(void)LL_LPUART_ClearFlag_TXFE(LPUART1);
 	(void)LL_LPUART_ClearFlag_TC(LPUART1);
-	(void)LL_LPUART_EnableIT_RXNE_RXFNE(LPUART1);
-	(void)LL_LPUART_Enable(LPUART1);
+
+	/* Uart is enable later, noise @ startup cause a rx interrupt to hit before the Freertos scheduler is starter */
+	//(void)LL_LPUART_EnableIT_RXNE_RXFNE(LPUART1);
+	//(void)LL_LPUART_Enable(LPUART1);
 
 	/* LPUART1 interrupt Init */
-	(void)NVIC_EnableIRQ(LPUART1_IRQn);
+	//(void)NVIC_EnableIRQ(LPUART1_IRQn);
 	(void)NVIC_SetPriority(LPUART1_IRQn, 6);
 }
 

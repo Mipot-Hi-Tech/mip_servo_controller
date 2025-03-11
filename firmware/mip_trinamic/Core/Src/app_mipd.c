@@ -42,6 +42,8 @@
 #include "app_mipd.h"
 #include <string.h>q
 #include "trinamic_tim.h"
+#include "trinamic_gpio.h"
+#include "trinamic_pulse_gen.h"
 #include "mip_d.h"
 #include "mip_d_def.h"
 #include "cortexcomm.h"
@@ -59,6 +61,7 @@
  ******************************************************************************/
 static void MipdInit(struct mip_d *const dev);
 static void MipdApp(void *pvParameters);
+static void AnalyzeRadioMessage(void);
 
 /*******************************************************************************
  * Variables
@@ -67,8 +70,12 @@ struct mip_d mipd;
 struct d_radio_phy_t mipd_radio_py;
 struct d_module_param_t mipd_config;
 TaskHandle_t mipd_device_task_handle;
-extern uint8_t ndata_indicate_event;
 uint8_t app_ndata_indicate_event;
+
+extern uint8_t ndata_indicate_event;
+extern uint32_t mot0_steps_shadow;
+extern uint32_t mot1_steps_shadow;
+extern uint32_t mot2_steps_shadow;
 
 /*******************************************************************************
  * Code
@@ -95,19 +102,57 @@ void MipdTask(void)
 static void MipdApp(void *pvParameters)
 {
 	enum mip_error_t retval;
-	const TickType_t xDelayTxMsg   = pdMS_TO_TICKS(5000);
-	const uint8_t test_msg[] = {0x01, 0x02, 0x03, 0x04};
+	const TickType_t xDelayTxMsg   = pdMS_TO_TICKS(100);
 	app_ndata_indicate_event = ndata_indicate_event;
 	for(;;)
 	{
 		if(app_ndata_indicate_event != ndata_indicate_event)
 		{
-			mipd_receive_message(&mipd);
+			retval = mipd_receive_message(&mipd);
+			if( no_error == retval )
+			{
+				(void)AnalyzeRadioMessage();
+			}
 			app_ndata_indicate_event = ndata_indicate_event;
 		}
 		(void)vTaskDelay(xDelayTxMsg);
 	}
 	(void)vTaskDelete(NULL);
+}
+
+static void AnalyzeRadioMessage(void)
+{
+	if(9 == mipd.rx_data_info.last_rx_msg_len)
+	{
+		if( mipd.rx_data_info.last_rx_msg[0] == TRINAMIC_MOT0_ID)
+		{
+			/* Set steps for MOT0 */
+			mot0_steps_shadow =  ((uint32_t)mipd.rx_data_info.last_rx_msg[1] << 24);  /* MSB */
+			mot0_steps_shadow |= ((uint32_t)mipd.rx_data_info.last_rx_msg[2] << 16);
+			mot0_steps_shadow |= ((uint32_t)mipd.rx_data_info.last_rx_msg[3] << 8);
+			mot0_steps_shadow |= ((uint32_t)mipd.rx_data_info.last_rx_msg[4] );       /* LSB */
+		}
+		else if( mipd.rx_data_info.last_rx_msg[0] == TRINAMIC_MOT1_ID)
+		{
+			/* Set steps for MOT1 */
+			mot1_steps_shadow =  ((uint32_t)mipd.rx_data_info.last_rx_msg[1] << 24);  /* MSB */
+			mot1_steps_shadow |= ((uint32_t)mipd.rx_data_info.last_rx_msg[2] << 16);
+			mot1_steps_shadow |= ((uint32_t)mipd.rx_data_info.last_rx_msg[3] << 8);
+			mot1_steps_shadow |= ((uint32_t)mipd.rx_data_info.last_rx_msg[4] );       /* LSB */
+		}
+		else if( mipd.rx_data_info.last_rx_msg[0] == TRINAMIC_MOT2_ID)
+		{
+			/* Set steps for MOT2 */
+			mot2_steps_shadow =  ((uint32_t)mipd.rx_data_info.last_rx_msg[1] << 24);  /* MSB */
+			mot2_steps_shadow |= ((uint32_t)mipd.rx_data_info.last_rx_msg[2] << 16);
+			mot2_steps_shadow |= ((uint32_t)mipd.rx_data_info.last_rx_msg[3] << 8);
+			mot2_steps_shadow |= ((uint32_t)mipd.rx_data_info.last_rx_msg[4] );       /* LSB */
+		}
+		else
+		{
+			;
+		}
+	}
 }
 
 static void MipdInit(struct mip_d *const dev)

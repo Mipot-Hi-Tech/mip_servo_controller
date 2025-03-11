@@ -10,6 +10,7 @@
 #include <string.h>
 #include "trinamic_uart.h"
 #include "trinamic_dac.h"
+#include "trinamic_pulse_gen.h"
 
 /*******************************************************************************
  * Definitions
@@ -73,6 +74,11 @@ const CLI_Command_Definition_t xCommandList[] = {
     }
 };
 
+typedef enum{
+	COMMAND_LINE_INTERFACE_INIT = 0,
+	COMMAND_LINE_INTERFACE_IDLE,
+}cli_t;
+
 const char * cli_prompt = "\r\ntrinamic_mip> ";
 const char * wrong      = "ERR";
 const char * success    = "SUCCESS";
@@ -84,11 +90,8 @@ char cOutputBuffer[configCOMMAND_INT_MAX_OUTPUT_SIZE];
 char pcInputString[MAX_INPUT_LENGTH];
 
 extern char cRxedChar;
-extern uint32_t mot0_steps;
 extern uint32_t mot0_steps_shadow;
-extern uint32_t mot1_steps;
 extern uint32_t mot1_steps_shadow;
-extern uint32_t mot2_steps;
 extern uint32_t mot2_steps_shadow;
 extern TIM_HandleTypeDef htim2;
 extern uint8_t dac_output_voltage;
@@ -105,20 +108,43 @@ static void AppCli(void *pvParameters)
 {
     uint8_t cInputIndex = 0;
     uint32_t receivedValue;
+    cli_t cli = COMMAND_LINE_INTERFACE_INIT;
     (void)vRegisterCLICommands();
     for (;;)
     {
-        xTaskNotifyWait(pdFALSE, 0, &receivedValue, portMAX_DELAY);
-        cRxedChar = receivedValue & 0xFF;
-        (void)cliWrite((char *)&cRxedChar);
-        if (cRxedChar == '\r' || cRxedChar == '\n')
-        {
-        	(void)handleNewline(pcInputString, cOutputBuffer, &cInputIndex);
-        }
-        else
-        {
-        	(void)handleCharacterInput(&cInputIndex, pcInputString);
-        }
+    	switch(cli)
+    	{
+			case COMMAND_LINE_INTERFACE_INIT:
+			{
+				(void)LL_LPUART_EnableIT_RXNE_RXFNE(LPUART1);
+				(void)LL_LPUART_Enable(LPUART1);
+				(void)NVIC_EnableIRQ(LPUART1_IRQn);
+				cli = COMMAND_LINE_INTERFACE_IDLE;
+				break;
+			}
+
+			case COMMAND_LINE_INTERFACE_IDLE:
+			{
+		        xTaskNotifyWait(pdFALSE, 0, &receivedValue, portMAX_DELAY);
+		        cRxedChar = receivedValue & 0xFF;
+		        (void)cliWrite((char *)&cRxedChar);
+		        if (cRxedChar == '\r' || cRxedChar == '\n')
+		        {
+		        	(void)handleNewline(pcInputString, cOutputBuffer, &cInputIndex);
+		        }
+		        else
+		        {
+		        	(void)handleCharacterInput(&cInputIndex, pcInputString);
+		        }
+				break;
+			}
+
+			default:
+			{
+				cli = COMMAND_LINE_INTERFACE_INIT;
+				break;
+			}
+    	}
     }
     (void)vTaskDelete(NULL);
 }

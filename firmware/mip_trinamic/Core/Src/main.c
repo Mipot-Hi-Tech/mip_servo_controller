@@ -43,22 +43,9 @@ void vApplicationIdleHook(void)
 
 int main(void)
 {
-	/* Low Level clock configuration */
-	(void)HAL_Init();
-	(void)SystemClock_Config();
-	/* GPIO and peripherals */
-	(void)IPCC_Init();
-	(void)TrinamicGPIO_Init();
-	(void)TIM2_Init();
-	(void)TIM16_Init();
-	(void)LPUART_Init();
-	(void)SPI2_Init();
-	(void)I2C1_Init();
-	(void)DAC_Init();
+
 	/* Set default state from potential system reset: Clear Stop2 flag of CPU1 */
 	__HAL_PWR_CLEAR_FLAG(PWR_FLAG_STOP2);
-	/* System configuration */
-	(void)TrinamicInit();
 	/* Boot CPU2 */
 	(void)HAL_PWREx_ReleaseCore(PWR_CORE_CPU2);
 	/* Wait until cpu2 is ready to receive commands */
@@ -66,8 +53,20 @@ int main(void)
 	{
 		__asm("NOP");
 	}
+	/* Low Level clock configuration */
+	(void)HAL_Init();
+	(void)SystemClock_Config();
+	(void)TIM16_Init();
+	Delay_ms(1000);
+	(void)IPCC_Init();
+	(void)TIM2_Init();
+	(void)LPUART_Init();
+	(void)SPI2_Init();
+	(void)I2C1_Init();
+	(void)DAC_Init();
+	(void)TrinamicGPIO_Init();
+	(void)TrinamicInit();
 	/* Starting Tasks */
-	(void)vTaskStepperDiagnosis();
 	(void)vTaskCli();
 	(void)MipdTask();
 	/* Enable FreeRTOS */
