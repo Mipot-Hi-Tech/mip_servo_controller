@@ -13,12 +13,15 @@ Build with [MIPOT](https://www.mipot.com) [32001506DEU](https://mipot.com/en/pro
  - [32001506CEU](https://mipot.com/en/products/mip-series/dual-core/32001506ceu/) - 868 MHz LoRa Mipot
  - [32001506DEU](https://mipot.com/en/products/mip-series/dual-core/32001506deu/) - 868 MHz LoRa Modem
  - [32001506BUS](https://mipot.com/en/products/mip-series/dual-core/32001506bus/) - 915 MHz LoRaWAN
- 
+
+> [!TIP]
+> MIP C library is avaliable in the [Official Repository](https://github.com/Mipot-Hi-Tech/mip).
+
 ## Board Overview
 
 ![img_cover](https://github.com/Mipot-Hi-Tech/mip_servo_controller/blob/master/img/img001.png)
-
-![img0](https://github.com/Mipot-Hi-Tech/mip_servo_controller/blob/master/img/img002.png)
+![img00](https://github.com/Mipot-Hi-Tech/mip_servo_controller/blob/master/img/img012.png)
+![img01](https://github.com/Mipot-Hi-Tech/mip_servo_controller/blob/master/img/img002.png)
 
 ## Top Side of the board
 
@@ -80,7 +83,8 @@ Based on [Freertos](https://www.freertos.org).
 
 ## Tools needed for development
 
-Programmer [STLINK](https://www.st.com/en/development-tools/st-link-v2.html).
+- Programmer [STLINK](https://www.st.com/en/development-tools/st-link-v2.html)
+- Serial Cable [TTL-232R-3V3](https://ftdichip.com/products/ttl-232r-3v3/)
 
 ## License
 

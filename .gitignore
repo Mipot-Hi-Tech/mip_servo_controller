@@ -1,5 +1,6 @@
 /kicad/*-backups/
 /kicad/*.log
+technical_docs/
 
 #build artefacts
 /firmware/mip_trinamic/Debug*/

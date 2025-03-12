@@ -40,7 +40,7 @@
  * Included files
  *****************************************************************************/
 #include "app_mipd.h"
-#include <string.h>q
+#include <string.h>
 #include "trinamic_tim.h"
 #include "trinamic_gpio.h"
 #include "trinamic_pulse_gen.h"
