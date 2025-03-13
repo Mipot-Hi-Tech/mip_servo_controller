@@ -1,6 +1,8 @@
 /*******************************************************************************
  * Included files
  *****************************************************************************/
+#include <stdio.h>
+#include <string.h>
 #include "stm32_lpm.h"
 #include "utilities_def.h"
 #include "FreeRTOS.h"
@@ -14,7 +16,7 @@
 #include "trinamic_iic.h"
 #include "trinamic_conf.h"
 #include "trinamic_dac.h"
-#include "app_diagnosis.h"
+#include "trinamic_diagnosis.h"
 #include "app_cli.h"
 #include "ipcc.h"
 #include "app_mipd.h"
@@ -27,6 +29,7 @@
  * Prototypes
  ******************************************************************************/
 static void SystemClock_Config(void);
+static void SystemClock_GetInfo(void);
 
 /*******************************************************************************
  * Variables
@@ -38,7 +41,7 @@ static void SystemClock_Config(void);
 void vApplicationIdleHook(void)
 {
 	/* User adds here LOW POWER features */
-	;
+	__WFI();
 }
 
 int main(void)
@@ -57,10 +60,13 @@ int main(void)
 		__asm("NOP");
 	}
 #endif
+	/* Get Clock Info */
+	(void)LPUART_Init();
+	(void)SystemClock_GetInfo();
+	/* Peripheral and GPIO Init */
 	(void)TIM16_Init();
 	(void)IPCC_Init();
 	(void)TIM2_Init();
-	(void)LPUART_Init();
 	(void)I2C1_Init();
 	(void)DAC_Init();
 	(void)TrinamicGPIO_Init();
@@ -74,6 +80,32 @@ int main(void)
 	/* Enable FreeRTOS */
 	(void)vTaskStartScheduler();
 	for(;;);
+}
+
+static void SystemClock_GetInfo(void)
+{
+    uint32_t hclk1 = HAL_RCC_GetHCLKFreq();
+    uint32_t hclk3 = HAL_RCC_GetHCLK3Freq();
+    uint32_t pclk1 = HAL_RCC_GetPCLK1Freq();
+    uint32_t pclk2 = HAL_RCC_GetPCLK2Freq();
+	uint32_t sysclk = HAL_RCC_GetSysClockFreq();
+    char buffer[100];
+    (void)LPUART_TxPolling("\r\n\r\n********************\r\n");
+    (void)LPUART_TxPolling("    MIP CM4 Init    \r\n");
+    (void)LPUART_TxPolling("********************\r\n");
+    sprintf(buffer, "Compiled on: %s %s\r\n", __DATE__, __TIME__);
+    (void)LPUART_TxPolling(buffer);
+    sprintf(buffer, "SYSCLK Frequency: %lu Hz\r\n", sysclk);
+    (void)LPUART_TxPolling(buffer);
+    sprintf(buffer, "HCLK1 Frequency: %lu Hz\r\n", hclk1);
+    (void)LPUART_TxPolling(buffer);
+    sprintf(buffer, "HCLK3 Frequency: %lu Hz\r\n", hclk3);
+    (void)LPUART_TxPolling(buffer);
+    sprintf(buffer, "PCLK1 Frequency: %lu Hz\r\n", pclk1);
+    (void)LPUART_TxPolling(buffer);
+    sprintf(buffer, "PCLK2 Frequency: %lu Hz\r\n", pclk2);
+    (void)LPUART_TxPolling(buffer);
+    (void)LPUART_TxPolling("********************\r\n");
 }
 
 static void SystemClock_Config(void)

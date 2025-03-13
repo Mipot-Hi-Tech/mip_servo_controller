@@ -1,8 +1,8 @@
 /*******************************************************************************
  * Included files
  *****************************************************************************/
-#include "app_diagnosis.h"
-#include "sys_task.h"
+#include <stdio.h>
+#include "trinamic_diagnosis.h"
 #include "tmc2130.h"
 #include "trinamic_uart.h"
 
@@ -13,8 +13,7 @@
 /*******************************************************************************
  * Prototypes
  ******************************************************************************/
-static void AppDiagnosis(void *pvParameters);
-static void TrinamicReadDrvStatus(TMC2130_t *driver);
+static void ReadDrvStatus(TMC2130_t *driver);
 
 /*******************************************************************************
  * Variables
@@ -29,48 +28,29 @@ extern bool mot2_init;
 /*******************************************************************************
  * Code
  ******************************************************************************/
-void vTaskStepperDiagnosis(void)
+void TrinamicReadDrvStatus(void)
 {
-	if ( (true == mot0_init) || (true == mot1_init) || (true == mot2_init) )
+	if (true == mot0_init)
 	{
-		/* Run task only if one of the steppers has completed initialization */
-		(void)LPUART_TxPolling("Creating stepper diagnosis task\r\n");
-		(void)xTaskCreate(AppDiagnosis,"AppDiagnosis",250, NULL, DIAGNOSIS_TASK_PRIORITY, &stepper_diagnosis_task_handle);
+		(void)LPUART_TxPolling("Checking MOT0\r\n");
+		(void)ReadDrvStatus(&mot0);
 	}
-	else
+	if( true == mot1_init)
 	{
-		(void)LPUART_TxPolling("Skipping stepper diagnosis task\r\n");
+		(void)LPUART_TxPolling("Checking MOT1\r\n");
+		(void)ReadDrvStatus(&mot1);
+	}
+	if( true == mot2_init)
+	{
+		(void)LPUART_TxPolling("Checking MOT2\r\n");
+		(void)ReadDrvStatus(&mot2);
 	}
 }
 
-static void AppDiagnosis(void *pvParameters)
-{
-	const TickType_t xDelayDiagnosis = pdMS_TO_TICKS(10000);
-    for (;;)
-    {
-    	if (true == mot0_init)
-    	{
-    		(void)LPUART_TxPolling("Checking MOT0\r\n");
-    		(void)TrinamicReadDrvStatus(&mot0);
-    	}
-    	if( true == mot1_init)
-    	{
-    		(void)LPUART_TxPolling("Checking MOT1\r\n");
-    		(void)TrinamicReadDrvStatus(&mot1);
-    	}
-    	if( true == mot2_init)
-    	{
-    		(void)LPUART_TxPolling("Checking MOT2\r\n");
-    		(void)TrinamicReadDrvStatus(&mot2);
-    	}
-    	(void)vTaskDelay(xDelayDiagnosis);
-    }
-    (void)vTaskDelete(NULL);
-}
-
-static void TrinamicReadDrvStatus(TMC2130_t *driver)
+static void ReadDrvStatus(TMC2130_t *driver)
 {
 	TMC_spi_status_t stat;
+	char buff[50];
 	stat = tmc_spi_read(driver->config.motor, (TMC_spi_datagram_t *)&driver->drv_status);
 	if(0 == stat)
 	{
@@ -94,5 +74,7 @@ static void TrinamicReadDrvStatus(TMC2130_t *driver)
 		{
 			(void)LPUART_TxPolling("DETECTED motor stall \r\n");
 		}
+		sprintf(buff, "DRVSTATUS: 0x%08X\r\n\r\n", (unsigned int)driver->drv_status.reg.value);
+		(void)LPUART_TxPolling(buff);
 	}
 }

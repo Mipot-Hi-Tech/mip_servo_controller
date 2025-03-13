@@ -11,6 +11,8 @@
 #include "trinamic_uart.h"
 #include "trinamic_dac.h"
 #include "trinamic_pulse_gen.h"
+#include "trinamic_gpio.h"
+#include "trinamic_diagnosis.h"
 
 /*******************************************************************************
  * Definitions
@@ -34,6 +36,7 @@ static BaseType_t CliMot0SetSteps(char *pcWriteBuffer, size_t xWriteBufferLen, c
 static BaseType_t CliMot1SetSteps(char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString);
 static BaseType_t CliMot2SetSteps(char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString);
 static BaseType_t CliSetTrinamic_AIN_IREF_Voltage(char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString);
+static BaseType_t CliTrinamic_ReadDrvStatus(char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString);
 
 /*******************************************************************************
  * Variables
@@ -41,33 +44,39 @@ static BaseType_t CliSetTrinamic_AIN_IREF_Voltage(char *pcWriteBuffer, size_t xW
 const CLI_Command_Definition_t xCommandList[] = {
 	{
 		.pcCommand                   = "fw",
-		.pcHelpString                = "fw:Get the current firmware version\r\n",
+		.pcHelpString                = "fw: Get the current firmware version\r\n",
 		.pxCommandInterpreter        = CliGetTrinamicMipFwVersion,
 		.cExpectedNumberOfParameters = 0
 	},
 	{
 		.pcCommand                   = "mot0",
-		.pcHelpString                = "mot0: Set the steps number\r\n",
+		.pcHelpString                = "mot0: [STEPS] [DIR]\r\nExample: mot0 1000 0\r\n\r\n",
 		.pxCommandInterpreter        = CliMot0SetSteps,
-		.cExpectedNumberOfParameters = 1
+		.cExpectedNumberOfParameters = 2
 	},
 	{
 		.pcCommand                   = "mot1",
-		.pcHelpString                = "mot1: Set the steps number\r\n",
+		.pcHelpString                = "mot1: [STEPS] [DIR]\r\nExample: mot1 10000 1\r\n\r\n",
 		.pxCommandInterpreter        = CliMot1SetSteps,
-		.cExpectedNumberOfParameters = 1
+		.cExpectedNumberOfParameters = 2
 	},
 	{
 		.pcCommand                   = "mot2",
-		.pcHelpString                = "mot2: Set the steps number\r\n",
+		.pcHelpString                = "mot2: [STEPS] [DIR]\r\nExample: mot2 500 1\r\n\r\n",
 		.pxCommandInterpreter        = CliMot2SetSteps,
-		.cExpectedNumberOfParameters = 1
+		.cExpectedNumberOfParameters = 2
 	},
 	{
 		.pcCommand                   = "dac",
-		.pcHelpString                = "dac: Set the voltage @ all steppers AIN_IREF pins \r\n",
+		.pcHelpString                = "dac: [VAL] Set the voltage @ all steppers AIN_IREF pins \r\n",
 		.pxCommandInterpreter        = CliSetTrinamic_AIN_IREF_Voltage,
 		.cExpectedNumberOfParameters = 1
+	},
+	{
+		.pcCommand                   = "drvs",
+		.pcHelpString                = "drvs: Read tmc2130 DRV_STATUS register for debug purpose\r\n",
+		.pxCommandInterpreter        = CliTrinamic_ReadDrvStatus,
+		.cExpectedNumberOfParameters = 0
 	},
     {
         .pcCommand = NULL
@@ -227,11 +236,26 @@ static BaseType_t CliMot0SetSteps(char *pcWriteBuffer, size_t xWriteBufferLen, c
 {
 	(void)xWriteBufferLen;
 	const char *pcParameter1;
+	const char *pcParameter2;
 	BaseType_t xParameter1StringLength;
+	BaseType_t xParameter2StringLength;
 	uint32_t steps;
+	uint32_t dir;
+	/* Get the step field */
 	pcParameter1      = FreeRTOS_CLIGetParameter(pcCommandString, 1, &xParameter1StringLength);
 	steps             = strtol(pcParameter1, NULL, 10);
 	mot0_steps_shadow = steps;
+	/* Get the dir field */
+	pcParameter2 = FreeRTOS_CLIGetParameter(pcCommandString, 2, &xParameter2StringLength);
+	dir = strtol(pcParameter2, NULL, 10);
+	if(dir == 0)
+	{
+		(void)HAL_GPIO_WritePin(DRV0_DIR_Port, DRV0_DIR_Pin, GPIO_PIN_RESET);
+	}
+	else
+	{
+		(void)HAL_GPIO_WritePin(DRV0_DIR_Port, DRV0_DIR_Pin, GPIO_PIN_SET);
+	}
 	strcpy(pcWriteBuffer, success);
 	return pdFALSE;
 }
@@ -240,11 +264,26 @@ static BaseType_t CliMot1SetSteps(char *pcWriteBuffer, size_t xWriteBufferLen, c
 {
 	(void)xWriteBufferLen;
 	const char *pcParameter1;
+	const char *pcParameter2;
 	BaseType_t xParameter1StringLength;
+	BaseType_t xParameter2StringLength;
 	uint32_t steps;
+	uint32_t dir;
+	/* Get the step field */
 	pcParameter1      = FreeRTOS_CLIGetParameter(pcCommandString, 1, &xParameter1StringLength);
 	steps             = strtol(pcParameter1, NULL, 10);
 	mot1_steps_shadow = steps;
+	/* Get the dir field */
+	pcParameter2 = FreeRTOS_CLIGetParameter(pcCommandString, 2, &xParameter2StringLength);
+	dir = strtol(pcParameter2, NULL, 10);
+	if(dir == 0)
+	{
+		(void)HAL_GPIO_WritePin(DRV1_DIR_Port, DRV1_DIR_Pin, GPIO_PIN_RESET);
+	}
+	else
+	{
+		(void)HAL_GPIO_WritePin(DRV1_DIR_Port, DRV1_DIR_Pin, GPIO_PIN_SET);
+	}
 	strcpy(pcWriteBuffer, success);
 	return pdFALSE;
 }
@@ -253,11 +292,26 @@ static BaseType_t CliMot2SetSteps(char *pcWriteBuffer, size_t xWriteBufferLen, c
 {
 	(void)xWriteBufferLen;
 	const char *pcParameter1;
+	const char *pcParameter2;
 	BaseType_t xParameter1StringLength;
+	BaseType_t xParameter2StringLength;
 	uint32_t steps;
+	uint32_t dir;
+	/* Get the step field */
 	pcParameter1      = FreeRTOS_CLIGetParameter(pcCommandString, 1, &xParameter1StringLength);
 	steps             = strtol(pcParameter1, NULL, 10);
 	mot2_steps_shadow = steps;
+	/* Get the dir field */
+	pcParameter2 = FreeRTOS_CLIGetParameter(pcCommandString, 2, &xParameter2StringLength);
+	dir = strtol(pcParameter2, NULL, 10);
+	if(dir == 0)
+	{
+		(void)HAL_GPIO_WritePin(DRV2_DIR_Port, DRV2_DIR_Pin, GPIO_PIN_RESET);
+	}
+	else
+	{
+		(void)HAL_GPIO_WritePin(DRV2_DIR_Port, DRV2_DIR_Pin, GPIO_PIN_SET);
+	}
 	strcpy(pcWriteBuffer, success);
 	return pdFALSE;
 }
@@ -280,5 +334,13 @@ static BaseType_t CliSetTrinamic_AIN_IREF_Voltage(char *pcWriteBuffer, size_t xW
 	{
 		strcpy(pcWriteBuffer, wrong);
 	}
+	return pdFALSE;
+}
+
+static BaseType_t CliTrinamic_ReadDrvStatus(char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString)
+{
+	(void)pcCommandString;
+	(void)xWriteBufferLen;
+	TrinamicReadDrvStatus();
 	return pdFALSE;
 }
