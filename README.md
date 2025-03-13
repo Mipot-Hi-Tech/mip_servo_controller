@@ -55,7 +55,7 @@ Build with [MIPOT](https://www.mipot.com) [32001506DEU](https://mipot.com/en/pro
 
 ## Embedded shell for Hardware Debug
 
-[!shell](https://github.com/Mipot-Hi-Tech/mip_servo_controller/blob/master/img/shell.gif)
+![shell](https://github.com/Mipot-Hi-Tech/mip_servo_controller/blob/master/img/shell.gif)
 
 ## Folder content and description
 
