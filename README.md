@@ -53,6 +53,10 @@ Build with [MIPOT](https://www.mipot.com) [32001506DEU](https://mipot.com/en/pro
 
 ![img8](https://github.com/Mipot-Hi-Tech/mip_servo_controller/blob/master/img/img010.png)
 
+## Embedded shell for Hardware Debug
+
+[!shell](https://github.com/Mipot-Hi-Tech/mip_servo_controller/blob/master/img/shell.gif)
+
 ## Folder content and description
 
 - **technical_docs:** Datasheet, Application notes and manual of the on-board electronic components.
