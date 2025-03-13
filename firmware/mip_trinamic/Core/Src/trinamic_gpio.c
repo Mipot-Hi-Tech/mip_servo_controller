@@ -187,7 +187,7 @@ void TrinamicMotXEnable(uint8_t driver)
 	}
 	else if (driver == TRINAMIC_MOT1_ID)
 	{
-		(void)HAL_GPIO_WritePin(DRV2_EN_Port, DRV2_EN_Pin, GPIO_PIN_RESET);
+		(void)HAL_GPIO_WritePin(DRV1_EN_Port, DRV1_EN_Pin, GPIO_PIN_RESET);
 
 	}
 	else if (driver == TRINAMIC_MOT2_ID)

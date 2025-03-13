@@ -43,7 +43,10 @@ void vApplicationIdleHook(void)
 
 int main(void)
 {
-
+	/* Low Level clock configuration */
+	(void)HAL_Init();
+	(void)SystemClock_Config();
+#ifdef RADIO_ON
 	/* Set default state from potential system reset: Clear Stop2 flag of CPU1 */
 	__HAL_PWR_CLEAR_FLAG(PWR_FLAG_STOP2);
 	/* Boot CPU2 */
@@ -53,22 +56,21 @@ int main(void)
 	{
 		__asm("NOP");
 	}
-	/* Low Level clock configuration */
-	(void)HAL_Init();
-	(void)SystemClock_Config();
+#endif
 	(void)TIM16_Init();
-	Delay_ms(1000);
 	(void)IPCC_Init();
 	(void)TIM2_Init();
 	(void)LPUART_Init();
-	(void)SPI2_Init();
 	(void)I2C1_Init();
 	(void)DAC_Init();
 	(void)TrinamicGPIO_Init();
+	(void)SPI2_Init();
 	(void)TrinamicInit();
 	/* Starting Tasks */
 	(void)vTaskCli();
+#ifdef RADIO_ON
 	(void)MipdTask();
+#endif
 	/* Enable FreeRTOS */
 	(void)vTaskStartScheduler();
 	for(;;);
@@ -94,7 +96,6 @@ static void SystemClock_Config(void)
 	RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
 	RCC_OscInitStruct.MSICalibrationValue = RCC_MSICALIBRATION_DEFAULT;
 	RCC_OscInitStruct.MSIClockRange = RCC_MSIRANGE_11; /*System Clock set at 48 MHz*/
-
 	/*Activate PLL, HSE clock source, System Clock 48 MHz*/
 	RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
 	RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
@@ -104,11 +105,8 @@ static void SystemClock_Config(void)
 	RCC_OscInitStruct.PLL.PLLQ = RCC_PLLQ_DIV2;
 	RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
 	HAL_RCC_OscConfig(&RCC_OscInitStruct);
-	CLEAR_BIT(SysTick->CTRL,SysTick_CTRL_TICKINT_Msk);
-	CLEAR_BIT(SysTick->CTRL,SysTick_CTRL_ENABLE_Msk);
 
 	/**Initializes the CPU, AHB and APB busses clocks*/
-
 	RCC_ClkInitStruct.ClockType = (RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_HCLK |
 								 RCC_CLOCKTYPE_HCLK2 | RCC_CLOCKTYPE_PCLK1 |
 								 RCC_CLOCKTYPE_PCLK2 | RCC_CLOCKTYPE_HCLK3);
@@ -119,12 +117,7 @@ static void SystemClock_Config(void)
 	RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 	RCC_ClkInitStruct.AHBCLK3Divider = RCC_SYSCLK_DIV1;
 	HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2);
-	CLEAR_BIT(SysTick->CTRL,SysTick_CTRL_TICKINT_Msk);
-	CLEAR_BIT(SysTick->CTRL,SysTick_CTRL_ENABLE_Msk);
-
 	PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_RTC;
 	PeriphClkInit.RTCClockSelection = RCC_RTCCLKSOURCE_LSE;
 	HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit);
-	CLEAR_BIT(SysTick->CTRL,SysTick_CTRL_TICKINT_Msk);
-	CLEAR_BIT(SysTick->CTRL,SysTick_CTRL_ENABLE_Msk);
 }

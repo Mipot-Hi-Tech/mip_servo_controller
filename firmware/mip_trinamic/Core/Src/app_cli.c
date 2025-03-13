@@ -117,8 +117,6 @@ static void AppCli(void *pvParameters)
 			case COMMAND_LINE_INTERFACE_INIT:
 			{
 				(void)LL_LPUART_EnableIT_RXNE_RXFNE(LPUART1);
-				(void)LL_LPUART_Enable(LPUART1);
-				(void)NVIC_EnableIRQ(LPUART1_IRQn);
 				cli = COMMAND_LINE_INTERFACE_IDLE;
 				break;
 			}
