@@ -1,3 +1,41 @@
+/**
+* Copyright (c) Mipot S.p.A. All rights reserved.
+*
+* BSD-3-Clause
+*
+* Redistribution and use in source and binary forms, with or without
+* modification, are permitted provided that the following conditions are met:
+*
+* 1. Redistributions of source code must retain the above copyright
+*    notice, this list of conditions and the following disclaimer.
+*
+* 2. Redistributions in binary form must reproduce the above copyright
+*    notice, this list of conditions and the following disclaimer in the
+*    documentation and/or other materials provided with the distribution.
+*
+* 3. Neither the name of the copyright holder nor the names of its
+*    contributors may be used to endorse or promote products derived from
+*    this software without specific prior written permission.
+*
+* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+* "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+* LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+* FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+* COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+* INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+* (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+* HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+* STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+* IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+* POSSIBILITY OF SUCH DAMAGE.
+*
+* @file       mip_b.c
+* @date
+* @version
+*
+*/
+
 /*******************************************************************************
  * Included files
  *****************************************************************************/
@@ -61,6 +99,8 @@ uint8_t IPCC_Init(void)
 	return stat;
 }
 
+/*-----------------------------------------------------------*/
+
 void HAL_IPCC_MspInit(IPCC_HandleTypeDef* ipccHandle)
 {
 	if(ipccHandle->Instance==IPCC)
@@ -73,6 +113,8 @@ void HAL_IPCC_MspInit(IPCC_HandleTypeDef* ipccHandle)
 	}
 }
 
+/*-----------------------------------------------------------*/
+
 void HAL_IPCC_MspDeInit(IPCC_HandleTypeDef* ipccHandle)
 {
 	if(ipccHandle->Instance==IPCC)
@@ -83,11 +125,15 @@ void HAL_IPCC_MspDeInit(IPCC_HandleTypeDef* ipccHandle)
 	}
 }
 
+/*-----------------------------------------------------------*/
+
 void CM0_COMM_tx_callback(struct __IPCC_HandleTypeDef *hipcc, uint32_t ChannelIndex, IPCC_CHANNELDirTypeDef ChannelDir)
 {
 	/* CORTEX M0(CPU2) respond to CORTEX M4(CPU1) */
 	CM0_rx = CM0_RX_COMM;
 }
+
+/*-----------------------------------------------------------*/
 
 void CM0_COMM_rx_callback(struct __IPCC_HandleTypeDef *hipcc, uint32_t ChannelIndex, IPCC_CHANNELDirTypeDef ChannelDir)
 {
@@ -96,10 +142,14 @@ void CM0_COMM_rx_callback(struct __IPCC_HandleTypeDef *hipcc, uint32_t ChannelIn
 	ndata_indicate_event++;
 }
 
+/*-----------------------------------------------------------*/
+
 void CM0_SERV_tx_callback(struct __IPCC_HandleTypeDef *hipcc, uint32_t ChannelIndex, IPCC_CHANNELDirTypeDef ChannelDir)
 {
 	*CommTxBusy = 0;
 }
+
+/*-----------------------------------------------------------*/
 
 void CM0_SERV_rx_callback(struct __IPCC_HandleTypeDef *hipcc, uint32_t ChannelIndex, IPCC_CHANNELDirTypeDef ChannelDir)
 {

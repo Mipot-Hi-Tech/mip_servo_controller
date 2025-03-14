@@ -1,5 +1,5 @@
 <!-- For .md file development refers to https://docs.github.com/en -->
-# [MIP](https://mipot.com/en/products/?cat=110) Series Design and Firmware Example
+# [MIP](https://mipot.com/en/products/?cat=110) Series Design and Firmware Example for Dual Core
 
 ## Wireless Triple Stepper/Servo Controller 
 
@@ -59,7 +59,6 @@ Build with [MIPOT](https://www.mipot.com) [32001506DEU](https://mipot.com/en/pro
 
 ## Folder content and description
 
-- **technical_docs:** Datasheet, Application notes and manual of the on-board electronic components.
 - **firmware:** Source code of the microcontroller written in C.
 	- **Core:** The application files, system and peripheral configuration.
 	- **freertos:** The Freertos kernel. *Keep read only*.
@@ -71,7 +70,7 @@ Build with [MIPOT](https://www.mipot.com) [32001506DEU](https://mipot.com/en/pro
 - **kicad:** hardware design files.Source files of schematic and PCB.
 	- **lib:** Symbols and footprints of the components.
 - **production:** Production files. Gerbers, BOM and Stencil.
-- **doc:**  User manual of the board and Schematic. PDF format.
+- **doc:** Schematic of the board. PDF format.
 
 ## Firmware Overview
 

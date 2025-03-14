@@ -1,3 +1,41 @@
+/**
+* Copyright (c) Mipot S.p.A. All rights reserved.
+*
+* BSD-3-Clause
+*
+* Redistribution and use in source and binary forms, with or without
+* modification, are permitted provided that the following conditions are met:
+*
+* 1. Redistributions of source code must retain the above copyright
+*    notice, this list of conditions and the following disclaimer.
+*
+* 2. Redistributions in binary form must reproduce the above copyright
+*    notice, this list of conditions and the following disclaimer in the
+*    documentation and/or other materials provided with the distribution.
+*
+* 3. Neither the name of the copyright holder nor the names of its
+*    contributors may be used to endorse or promote products derived from
+*    this software without specific prior written permission.
+*
+* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+* "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+* LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+* FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+* COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+* INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+* (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+* HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+* STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+* IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+* POSSIBILITY OF SUCH DAMAGE.
+*
+* @file       mip_b.c
+* @date
+* @version
+*
+*/
+
 /*******************************************************************************
  * Included files
  *****************************************************************************/
@@ -6,7 +44,7 @@
 /*******************************************************************************
  * Definitions
  ******************************************************************************/
-#define NWAKE0_MOD_PUSHPULL
+//#define NWAKE0_MOD_PUSHPULL
 #define DIAG_PIN_INPUT_TYPE GPIO_MODE_IT_RISING
 #define DIAG_PIN_PULL_TYPE  GPIO_NOPULL
 
@@ -22,13 +60,6 @@ static void I2cSclRelease(void);
 /*******************************************************************************
  * Code
  ******************************************************************************/
-
-/*!
- * @brief Configuration on GPIO Pins
- * @param[in] None.
- * @return    None.
- * @retval    Void.
- */
 void TrinamicGPIO_Init(void)
 {
 	GPIO_InitTypeDef GPIO_InitStruct = {0};
@@ -143,6 +174,8 @@ void TrinamicGPIO_Init(void)
 	//HAL_NVIC_EnableIRQ(EXTI4_15_IRQn);
 }
 
+/*-----------------------------------------------------------*/
+
 void TrinamicNSS_Select(uint8_t driver)
 {
 	/* Drive NSS Pin ON selected stepper driver */
@@ -170,12 +203,16 @@ void TrinamicNSS_Select(uint8_t driver)
 	}
 }
 
+/*-----------------------------------------------------------*/
+
 void TrinamicNSS_Idle(void)
 {
 	(void)HAL_GPIO_WritePin(DRV0_SPI_NSS_Port, DRV0_SPI_NSS_Pin, GPIO_PIN_SET);
 	(void)HAL_GPIO_WritePin(DRV1_SPI_NSS_Port, DRV1_SPI_NSS_Pin, GPIO_PIN_SET);
 	(void)HAL_GPIO_WritePin(DRV2_SPI_NSS_Port, DRV2_SPI_NSS_Pin, GPIO_PIN_SET);
 }
+
+/*-----------------------------------------------------------*/
 
 void TrinamicMotXEnable(uint8_t driver)
 {
@@ -200,6 +237,8 @@ void TrinamicMotXEnable(uint8_t driver)
 	}
 }
 
+/*-----------------------------------------------------------*/
+
 void TrinamicMotXDisable(uint8_t driver)
 {
 	/* From TMC2130 TMC2130 DATASHEET (Rev. 1.16 / 2023-MAR-08) PAR 2.2 PAGE 11 */
@@ -222,6 +261,8 @@ void TrinamicMotXDisable(uint8_t driver)
 		;
 	}
 }
+
+/*-----------------------------------------------------------*/
 
 static void I2cSclRelease(void)
 {

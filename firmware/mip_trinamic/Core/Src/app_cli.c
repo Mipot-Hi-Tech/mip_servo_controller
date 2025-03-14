@@ -1,3 +1,41 @@
+/**
+* Copyright (c) Mipot S.p.A. All rights reserved.
+*
+* BSD-3-Clause
+*
+* Redistribution and use in source and binary forms, with or without
+* modification, are permitted provided that the following conditions are met:
+*
+* 1. Redistributions of source code must retain the above copyright
+*    notice, this list of conditions and the following disclaimer.
+*
+* 2. Redistributions in binary form must reproduce the above copyright
+*    notice, this list of conditions and the following disclaimer in the
+*    documentation and/or other materials provided with the distribution.
+*
+* 3. Neither the name of the copyright holder nor the names of its
+*    contributors may be used to endorse or promote products derived from
+*    this software without specific prior written permission.
+*
+* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+* "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+* LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+* FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+* COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+* INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+* (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+* HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+* STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+* IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+* POSSIBILITY OF SUCH DAMAGE.
+*
+* @file       mip_b.c
+* @date
+* @version
+*
+*/
+
 /*******************************************************************************
  * Included files
  *****************************************************************************/
@@ -36,7 +74,7 @@ static BaseType_t CliMot0SetSteps(char *pcWriteBuffer, size_t xWriteBufferLen, c
 static BaseType_t CliMot1SetSteps(char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString);
 static BaseType_t CliMot2SetSteps(char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString);
 static BaseType_t CliSetTrinamic_AIN_IREF_Voltage(char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString);
-static BaseType_t CliTrinamic_ReadDrvStatus(char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString);
+static BaseType_t CliTrinamic_ReadAllRegistrs(char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString);
 
 /*******************************************************************************
  * Variables
@@ -68,15 +106,15 @@ const CLI_Command_Definition_t xCommandList[] = {
 	},
 	{
 		.pcCommand                   = "dac",
-		.pcHelpString                = "dac: [VAL] Set the voltage @ all steppers AIN_IREF pins \r\n",
+		.pcHelpString                = "dac: [VAL] Set the voltage @ all steppers AIN_IREF pins \r\n\r\n",
 		.pxCommandInterpreter        = CliSetTrinamic_AIN_IREF_Voltage,
 		.cExpectedNumberOfParameters = 1
 	},
 	{
-		.pcCommand                   = "drvs",
-		.pcHelpString                = "drvs: Read tmc2130 DRV_STATUS register for debug purpose\r\n",
-		.pxCommandInterpreter        = CliTrinamic_ReadDrvStatus,
-		.cExpectedNumberOfParameters = 0
+		.pcCommand                   = "rread",
+		.pcHelpString                = "rread: [MOTOR ID]\r\nExample: rread 1\r\n\r\n",
+		.pxCommandInterpreter        =  CliTrinamic_ReadAllRegistrs,
+		.cExpectedNumberOfParameters = 1
 	},
     {
         .pcCommand = NULL
@@ -88,13 +126,14 @@ typedef enum{
 	COMMAND_LINE_INTERFACE_IDLE,
 }cli_t;
 
-const char * cli_prompt = "\r\ntrinamic_mip> ";
+const char * cli_prompt = "\r\nmip> ";
 const char * wrong      = "ERR";
 const char * success    = "SUCCESS";
 const char * mip_fail   = "MIP MODULE NOT PRESENT!";
 /* CLI escape sequences */
 uint8_t backspace[] = "\b \b";
 uint8_t backspace_tt[] = " \b";
+
 char cOutputBuffer[configCOMMAND_INT_MAX_OUTPUT_SIZE];
 char pcInputString[MAX_INPUT_LENGTH];
 
@@ -112,6 +151,8 @@ void vTaskCli(void)
 {
 	(void)xTaskCreate(AppCli,"AppCli",250, NULL, CLI_TASK_PRIORITY, &cli_task_handle);
 }
+
+/*-----------------------------------------------------------*/
 
 static void AppCli(void *pvParameters)
 {
@@ -156,10 +197,14 @@ static void AppCli(void *pvParameters)
     (void)vTaskDelete(NULL);
 }
 
+/*-----------------------------------------------------------*/
+
 static void cliWrite(const char *str)
 {
 	(void)LPUART_TxPolling(str);
 }
+
+/*-----------------------------------------------------------*/
 
 static void handleCharacterInput(uint8_t *cInputIndex, char *pcInputString)
 {
@@ -181,6 +226,8 @@ static void handleCharacterInput(uint8_t *cInputIndex, char *pcInputString)
     }
 }
 
+/*-----------------------------------------------------------*/
+
 static void handleNewline(const char *const pcInputString, char *cOutputBuffer, uint8_t *cInputIndex)
 {
 	(void)cliWrite("\r\n");
@@ -193,7 +240,10 @@ static void handleNewline(const char *const pcInputString, char *cOutputBuffer, 
     (void)cliWrite(cli_prompt);
     *cInputIndex = 0;
     memset((void*)pcInputString, 0x00, MAX_INPUT_LENGTH);
+	LPUART_ClearRxBuff();
 }
+
+/*-----------------------------------------------------------*/
 
 static void handleBackspace(uint8_t *cInputIndex, char *pcInputString)
 {
@@ -216,6 +266,8 @@ static void handleBackspace(uint8_t *cInputIndex, char *pcInputString)
     }
 }
 
+/*-----------------------------------------------------------*/
+
 static void vRegisterCLICommands(void)
 {
     for (int i = 0; xCommandList[i].pcCommand != NULL; i++)
@@ -224,13 +276,18 @@ static void vRegisterCLICommands(void)
     }
 }
 
+/*-----------------------------------------------------------*/
+
 static BaseType_t CliGetTrinamicMipFwVersion(char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString)
 {
 	(void)pcCommandString;
 	(void)xWriteBufferLen;
 	sprintf(pcWriteBuffer, "fwver: %u", FW_VERSION);
+	strcpy(pcWriteBuffer, success);
 	return pdFALSE;
 }
+
+/*-----------------------------------------------------------*/
 
 static BaseType_t CliMot0SetSteps(char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString)
 {
@@ -260,6 +317,8 @@ static BaseType_t CliMot0SetSteps(char *pcWriteBuffer, size_t xWriteBufferLen, c
 	return pdFALSE;
 }
 
+/*-----------------------------------------------------------*/
+
 static BaseType_t CliMot1SetSteps(char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString)
 {
 	(void)xWriteBufferLen;
@@ -287,6 +346,8 @@ static BaseType_t CliMot1SetSteps(char *pcWriteBuffer, size_t xWriteBufferLen, c
 	strcpy(pcWriteBuffer, success);
 	return pdFALSE;
 }
+
+/*-----------------------------------------------------------*/
 
 static BaseType_t CliMot2SetSteps(char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString)
 {
@@ -316,6 +377,8 @@ static BaseType_t CliMot2SetSteps(char *pcWriteBuffer, size_t xWriteBufferLen, c
 	return pdFALSE;
 }
 
+/*-----------------------------------------------------------*/
+
 static BaseType_t CliSetTrinamic_AIN_IREF_Voltage(char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString)
 {
 	(void)xWriteBufferLen;
@@ -337,10 +400,25 @@ static BaseType_t CliSetTrinamic_AIN_IREF_Voltage(char *pcWriteBuffer, size_t xW
 	return pdFALSE;
 }
 
-static BaseType_t CliTrinamic_ReadDrvStatus(char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString)
+/*-----------------------------------------------------------*/
+
+static BaseType_t CliTrinamic_ReadAllRegistrs(char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString)
 {
 	(void)pcCommandString;
 	(void)xWriteBufferLen;
-	TrinamicReadDrvStatus();
+	const char *pcParameter1;
+	BaseType_t xParameter1StringLength;
+	uint32_t motor_id;
+	pcParameter1 = FreeRTOS_CLIGetParameter(pcCommandString, 1, &xParameter1StringLength);
+	motor_id = strtol(pcParameter1, NULL, 10);
+	if( (TRINAMIC_MOT0_ID == motor_id) || (TRINAMIC_MOT1_ID == motor_id) || (TRINAMIC_MOT2_ID == motor_id) )
+	{
+		TrinamicReadAllResisters(motor_id);
+		strcpy(pcWriteBuffer, success);
+	}
+	else
+	{
+		strcpy(pcWriteBuffer, wrong);
+	}
 	return pdFALSE;
 }

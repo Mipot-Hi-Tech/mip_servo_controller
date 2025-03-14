@@ -41,7 +41,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "common.h"
 
-//#define TMC2130_COMPLETE // comment out for minimum set of registers
+#define TMC2130_COMPLETE
 
 #pragma pack(push, 1)
 

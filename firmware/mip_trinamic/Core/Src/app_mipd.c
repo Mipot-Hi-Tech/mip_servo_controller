@@ -99,6 +99,8 @@ void MipdTask(void)
 	(void)xTaskCreate(MipdApp,"MipdApp",100, NULL,  MIPD_TASK_PRIOTITY, &mipd_device_task_handle);
 }
 
+/*-----------------------------------------------------------*/
+
 static void MipdApp(void *pvParameters)
 {
 	enum mip_error_t retval;
@@ -119,6 +121,8 @@ static void MipdApp(void *pvParameters)
 	}
 	(void)vTaskDelete(NULL);
 }
+
+/*-----------------------------------------------------------*/
 
 static void AnalyzeRadioMessage(void)
 {
@@ -154,6 +158,8 @@ static void AnalyzeRadioMessage(void)
 		}
 	}
 }
+
+/*-----------------------------------------------------------*/
 
 static void MipdInit(struct mip_d *const dev)
 {
