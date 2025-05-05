@@ -30,7 +30,7 @@
 * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 * POSSIBILITY OF SUCH DAMAGE.
 *
-* @file       mip_b.c
+* @file
 * @date
 * @version
 *
@@ -58,6 +58,10 @@
 uint8_t mipd_tx_buff[MIPD_BUFF_SZ] = {0};
 uint8_t mipd_rx_buff[MIPD_BUFF_SZ] = {0};
 
+/*******************************************************************************
+ * Extern
+ ******************************************************************************/
+ 
 /*******************************************************************************
  * Code
  ******************************************************************************/
@@ -119,9 +123,8 @@ enum mip_error_t mipd_factory_reset(const struct mip_d *const dev)
 	mipd_tx_buff[1] = MIP_FACTORY_RESET_CMD;
 	mipd_tx_buff[2] = 0x00;
 	mipd_tx_buff[3] = mip_generate_checksum(mipd_tx_buff, 3);
-	/* After a factory reset cmd response from mipd is coming after 140 ms */
-	retval = dev->send_and_receive_fn(mipd_tx_buff, 4, mipd_rx_buff, &rx_msg_len, 200);
-	dev->delay_ms_fn(MIP_DELAY_FACTORY_RESET);
+	retval = dev->send_and_receive_fn(mipd_tx_buff, 4, mipd_rx_buff, &rx_msg_len, MIP_DELAY_FACTORY_RESET);
+	dev->delay_ms_fn(MIPD_DELAY_MSG);
 	return retval;
 }
 
@@ -406,7 +409,7 @@ enum mip_error_t mipd_tx_msg_cmd(const uint8_t *msg, uint8_t msg_len, struct mip
 		return retval;
 	}
 	/* TX_MSG_IND IS COMING FROM THE MODULE */
-	retval = dev->receive_fn(mipd_rx_buff, &rx_msg_len, dev->module_param.DATA_INDICATE_TIMEOUT + 1000);
+	retval = dev->receive_fn(mipd_rx_buff, &rx_msg_len, dev->module_param.DATA_INDICATE_TIMEOUT + 2000);
 	if(retval == no_error)
 	{
 		retval = mip_validate_response(mipd_rx_buff, rx_msg_len);

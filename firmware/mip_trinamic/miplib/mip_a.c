@@ -30,7 +30,7 @@
 * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 * POSSIBILITY OF SUCH DAMAGE.
 *
-* @file       mip_b.c
+* @file
 * @date
 * @version
 *
@@ -58,6 +58,10 @@
 uint8_t mipa_tx_buff[MIPA_BUFF_SZ] = {0};
 uint8_t mipa_rx_buff[MIPA_BUFF_SZ] = {0};
 
+/*******************************************************************************
+ * Extern
+ ******************************************************************************/
+ 
 /*******************************************************************************
  * Code
  ******************************************************************************/
@@ -119,9 +123,8 @@ enum mip_error_t mipa_factory_reset(const struct mip_a *const dev)
 	mipa_tx_buff[1] = MIP_FACTORY_RESET_CMD;
 	mipa_tx_buff[2] = 0x00;
 	mipa_tx_buff[3] = mip_generate_checksum(mipa_tx_buff, 3);
-	/* After a factory reset cmd response from mipa is coming after 140 ms */
-	retval = dev->send_and_receive_fn(mipa_tx_buff, 4, mipa_rx_buff, &rx_msg_len, 200);
-	dev->delay_ms_fn(MIP_DELAY_FACTORY_RESET);
+	retval = dev->send_and_receive_fn(mipa_tx_buff, 4, mipa_rx_buff, &rx_msg_len, MIP_DELAY_FACTORY_RESET);
+	dev->delay_ms_fn(MIPA_DELAY_MSG);
 	return retval;
 }
 
@@ -547,6 +550,7 @@ enum mip_error_t mipa_eeprom_read_wmbus_medium_access_parameters(const struct mi
 			}
 		}
 	}
+	dev->delay_ms_fn(MIPA_DELAY_MSG);
 	return retval;
 }
 
@@ -586,6 +590,7 @@ enum mip_error_t mipa_tx_msg_cmd(const uint8_t *msg, uint8_t msg_len, struct mip
 			}
 		}
 	}
+	dev->delay_ms_fn(MIPA_DELAY_MSG);
 	return retval;
 }
 

@@ -30,7 +30,7 @@
 * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 * POSSIBILITY OF SUCH DAMAGE.
 *
-* @file       mip_b.c
+* @file
 * @date
 * @version
 *
@@ -275,8 +275,11 @@ struct c_LinkCheck_t {
  */
 struct c_end_node_data_t {
 	bool is_paired;
+	/* MASTER Serial Number */
 	uint8_t master_serial_number[4];
 	uint32_t SessionTxTime;
+	/* MASTER table index assigned after pairing phase. */
+	uint8_t idx;
 };
 
 /*!

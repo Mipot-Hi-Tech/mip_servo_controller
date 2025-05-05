@@ -30,7 +30,7 @@
 * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 * POSSIBILITY OF SUCH DAMAGE.
 *
-* @file       mip_b.c
+* @file
 * @date
 * @version
 *
@@ -57,6 +57,10 @@
 uint8_t mipb_tx_buff[MIPB_BUFF_SZ] = {0};
 uint8_t mipb_rx_buff[MIPB_BUFF_SZ] = {0};
 
+/*******************************************************************************
+ * Extern
+ ******************************************************************************/
+ 
 /*******************************************************************************
  * Code
  ******************************************************************************/
@@ -118,8 +122,8 @@ enum mip_error_t mipb_factory_reset(const struct mip_b *const dev)
 	mipb_tx_buff[1] = MIP_FACTORY_RESET_CMD;
 	mipb_tx_buff[2] = 0x00;
 	mipb_tx_buff[3] = mip_generate_checksum(mipb_tx_buff, 3);
-	retval = dev->send_and_receive_fn(mipb_tx_buff, 4, mipb_rx_buff, &rx_msg_len, 200);
-	dev->delay_ms_fn(MIP_DELAY_FACTORY_RESET);
+	retval = dev->send_and_receive_fn(mipb_tx_buff, 4, mipb_rx_buff, &rx_msg_len, MIP_DELAY_FACTORY_RESET);
+	dev->delay_ms_fn(MIPB_DELAY_MSG);
 	return retval;
 }
 

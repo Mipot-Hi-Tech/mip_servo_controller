@@ -30,7 +30,7 @@
 * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 * POSSIBILITY OF SUCH DAMAGE.
 *
-* @file       mip_b.c
+* @file
 * @date
 * @version
 *
@@ -57,6 +57,10 @@
 uint8_t mipc_tx_buff[MIPC_BUFF_SZ] = {0};
 uint8_t mipc_rx_buff[MIPC_BUFF_SZ] = {0};
 
+/*******************************************************************************
+ * Extern
+ ******************************************************************************/
+ 
 /*******************************************************************************
  * Code
  ******************************************************************************/
@@ -118,8 +122,8 @@ enum mip_error_t mipc_factory_reset(const struct mip_c *const dev)
 	mipc_tx_buff[1] = MIP_FACTORY_RESET_CMD;
 	mipc_tx_buff[2] = 0x00;
 	mipc_tx_buff[3] = mip_generate_checksum(mipc_tx_buff, 3);
-	retval = dev->send_and_receive_fn(mipc_tx_buff, 4, mipc_rx_buff, &rx_msg_len, 200);
-	dev->delay_ms_fn(MIP_DELAY_FACTORY_RESET);
+	retval = dev->send_and_receive_fn(mipc_tx_buff, 4, mipc_rx_buff, &rx_msg_len, MIP_DELAY_FACTORY_RESET);
+	dev->delay_ms_fn(MIPC_DELAY_MSG);
 	return retval;
 }
 
@@ -718,7 +722,6 @@ enum mip_error_t mipc_delete_en_device(uint8_t idx, struct mip_c *const dev)
 {
 	enum mip_error_t retval;
 	uint16_t rx_msg_len;
-	uint8_t i;
 	if (dev->stack_param.device_type != master)
 		return operation_not_supported;
 	mipc_tx_buff[0] = MIP_HEADER;
@@ -738,7 +741,6 @@ enum mip_error_t mipc_delete_en_device(uint8_t idx, struct mip_c *const dev)
 	dev->delay_ms_fn(MIPC_DELAY_MSG);
 	return retval;
 }
-
 
 /*!
  * @brief Deletes whole Network Table.
@@ -843,6 +845,30 @@ enum mip_error_t mipc_handle_IND_messages(struct mip_c *const dev, uint32_t time
 		{
 			switch(mipc_rx_buff[1])
 			{
+				case MIPC_PAIRING_CONFIRM_IND:
+				{
+					if(mipc_rx_buff[3] == no_error)
+					{
+						dev->end_node_data.is_paired = true;
+						dev->end_node_data.master_serial_number[3] = mipc_rx_buff[4];
+						dev->end_node_data.master_serial_number[2] = mipc_rx_buff[5];
+						dev->end_node_data.master_serial_number[1] = mipc_rx_buff[6];
+						dev->end_node_data.master_serial_number[0] = mipc_rx_buff[7];
+						dev->end_node_data.idx = mipc_rx_buff[8];
+					}
+					else
+					{
+						dev->end_node_data.is_paired = false;
+						dev->end_node_data.master_serial_number[3] = 0;
+						dev->end_node_data.master_serial_number[2] = 0;
+						dev->end_node_data.master_serial_number[1] = 0;
+						dev->end_node_data.master_serial_number[0] = 0;
+						dev->end_node_data.idx = 0;
+						retval = unknown_error;
+					}
+					break;
+				}
+
 				case MIPC_RX_MSG_IND:
 				{
 					dev->rx_data.RssiLSB   = mipc_rx_buff[4];

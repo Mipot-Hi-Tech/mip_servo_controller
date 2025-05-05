@@ -30,7 +30,7 @@
 * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 * POSSIBILITY OF SUCH DAMAGE.
 *
-* @file       mip_b.c
+* @file
 * @date
 * @version
 *
@@ -67,12 +67,11 @@
 #define DATA_IND_TIMEOUT_DEF_VAL   (0x05U)
 
 #define MIP_UART_TX_TIMEOUT         300U
-#define MIP_UART_RX_TIMEOUT         50U
 #define MIP_UART_END_OF_MSG_TIMEOUT 5U
 
-#define MIP_DELAY_RESET             100U
-#define MIP_DELAY_FACTORY_RESET     300U
-#define MIP_EEPROM_WRITE_TIMEOUT    30U
+#define MIP_DELAY_RESET             400U
+#define MIP_DELAY_FACTORY_RESET     500U
+#define MIP_EEPROM_WRITE_TIMEOUT    500U
 
 /*!
  * @brief Mipot module avaliable uart baud rates

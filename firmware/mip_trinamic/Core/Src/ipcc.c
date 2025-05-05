@@ -146,7 +146,7 @@ void CM0_COMM_rx_callback(struct __IPCC_HandleTypeDef *hipcc, uint32_t ChannelIn
 
 void CM0_SERV_tx_callback(struct __IPCC_HandleTypeDef *hipcc, uint32_t ChannelIndex, IPCC_CHANNELDirTypeDef ChannelDir)
 {
-	*CommTxBusy = 0;
+	/* CORTEX M0(CPU2) respond to CM0_TX_END event from CORTEX M4(CPU1) */
 }
 
 /*-----------------------------------------------------------*/
@@ -154,4 +154,5 @@ void CM0_SERV_tx_callback(struct __IPCC_HandleTypeDef *hipcc, uint32_t ChannelIn
 void CM0_SERV_rx_callback(struct __IPCC_HandleTypeDef *hipcc, uint32_t ChannelIndex, IPCC_CHANNELDirTypeDef ChannelDir)
 {
 	CM0_rx = CM0_RX_SERV;
+	HAL_IPCC_NotifyCPU(hipcc, CH_ID_SERV, IPCC_CHANNEL_DIR_RX);
 }
