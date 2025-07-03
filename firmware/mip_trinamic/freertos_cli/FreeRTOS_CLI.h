@@ -120,6 +120,9 @@ const char * FreeRTOS_CLIGetParameter( const char * pcCommandString,
                                        UBaseType_t uxWantedParameter,
                                        BaseType_t * pxParameterStringLength );
 
+BaseType_t FreeRTOS_CLISearchCommand( const char * const pcCommandInput,
+                                       char * pcWriteBuffer,
+                                       size_t xWriteBufferLen );
 /* *INDENT-OFF* */
 #ifdef __cplusplus
     }

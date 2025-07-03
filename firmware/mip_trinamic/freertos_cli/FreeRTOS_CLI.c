@@ -225,6 +225,51 @@ BaseType_t FreeRTOS_CLIProcessCommand( const char * const pcCommandInput,
 
     return xReturn;
 }
+
+/*-----------------------------------------------------------*/
+
+BaseType_t FreeRTOS_CLISearchCommand( const char * const pcCommandInput,
+                                       char * pcWriteBuffer,
+                                       size_t xWriteBufferLen )
+{
+    static const CLI_Definition_List_Item_t * pxCommandS = NULL;
+    BaseType_t xReturn = pdTRUE;
+    const char * pcRegisteredCommandString;
+    size_t xCommandStringLength;
+
+    /* Note:  This function is not re-entrant.  It must not be called from more
+     * thank one task. */
+
+    if( pxCommandS == NULL )
+    {
+        /* Search for the command string in the list of registered commands. */
+        for( pxCommandS = &xRegisteredCommands; pxCommandS != NULL; pxCommandS = pxCommandS->pxNext )
+        {
+            pcRegisteredCommandString = pxCommandS->pxCommandLineDefinition->pcCommand;
+            xCommandStringLength = strlen( pcRegisteredCommandString );
+
+            /* To ensure the string lengths match exactly, so as not to pick up
+             * a sub-string of a longer command, check the byte after the expected
+             * end of the string is either the end of the string or a space before
+             * a parameter. */
+            if( strncmp( pcCommandInput, pcRegisteredCommandString, xCommandStringLength ) == 0 )
+            {
+                if( ( pcCommandInput[ xCommandStringLength ] == ' ' ) || ( pcCommandInput[ xCommandStringLength ] == 0x00 ) )
+                {
+                    /* The command has been found.  Check it has the expected
+                     * number of parameters.  If cExpectedNumberOfParameters is -1,
+                     * then there could be a variable number of parameters and no
+                     * check is made. */
+                    xReturn = pdFALSE;
+                    break;
+                }
+            }
+        }
+    }
+    pxCommandS = NULL;
+	return xReturn;
+}
+
 /*-----------------------------------------------------------*/
 
 char * FreeRTOS_CLIGetOutputBuffer( void )

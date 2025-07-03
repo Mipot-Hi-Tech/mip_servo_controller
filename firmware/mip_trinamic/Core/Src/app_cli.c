@@ -56,8 +56,10 @@
  * Definitions
  ******************************************************************************/
 #define MAX_INPUT_LENGTH 50
+#define MAX_HISTORY_LEN  10
 #define configCOMMAND_INT_MAX_OUTPUT_SIZE 200
 #define USING_OTHER_TERMINAL 1
+#define HISTORY_CHARACTER 0x3F /* � */
 
 /*******************************************************************************
  * Prototypes
@@ -68,6 +70,8 @@ static void handleBackspace(uint8_t *cInputIndex, char *pcInputString);
 static void handleNewline(const char *const pcInputString, char *cOutputBuffer, uint8_t *cInputIndex);
 static void handleCharacterInput(uint8_t *cInputIndex, char *pcInputString);
 static void cliWrite(const char *str);
+static void handleHistory(uint8_t *cInputIndex);
+
 /* Commands */
 static BaseType_t CliGetTrinamicMipFwVersion(char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString);
 static BaseType_t CliMot0SetSteps(char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString);
@@ -136,6 +140,7 @@ uint8_t backspace_tt[] = " \b";
 
 char cOutputBuffer[configCOMMAND_INT_MAX_OUTPUT_SIZE];
 char pcInputString[MAX_INPUT_LENGTH];
+char cli_history[MAX_INPUT_LENGTH];
 
 extern char cRxedChar;
 extern uint32_t mot0_steps_shadow;
@@ -175,13 +180,18 @@ static void AppCli(void *pvParameters)
 			{
 		        xTaskNotifyWait(pdFALSE, 0, &receivedValue, portMAX_DELAY);
 		        cRxedChar = receivedValue & 0xFF;
-		        (void)cliWrite((char *)&cRxedChar);
 		        if (cRxedChar == '\r' || cRxedChar == '\n')
 		        {
+			        (void)cliWrite((char *)&cRxedChar);
 		        	(void)handleNewline(pcInputString, cOutputBuffer, &cInputIndex);
+		        }
+		        else if (cRxedChar == HISTORY_CHARACTER)
+		        {
+		        	(void)handleHistory(&cInputIndex);
 		        }
 		        else
 		        {
+			        (void)cliWrite((char *)&cRxedChar);
 		        	(void)handleCharacterInput(&cInputIndex, pcInputString);
 		        }
 				break;
@@ -195,6 +205,18 @@ static void AppCli(void *pvParameters)
     	}
     }
     (void)vTaskDelete(NULL);
+}
+
+/*-----------------------------------------------------------*/
+
+static void handleHistory(uint8_t *cInputIndex)
+{
+	if(cli_history[0] != 0)
+	{
+		memcpy(pcInputString, cli_history, MAX_INPUT_LENGTH);
+		*cInputIndex = sizeof(pcInputString);
+		(void)LPUART_TxPolling(cli_history);
+	}
 }
 
 /*-----------------------------------------------------------*/
@@ -232,15 +254,21 @@ static void handleNewline(const char *const pcInputString, char *cOutputBuffer, 
 {
 	(void)cliWrite("\r\n");
     BaseType_t xMoreDataToFollow;
+    BaseType_t xCommandFound;
     do
     {
+    	xCommandFound = FreeRTOS_CLISearchCommand(pcInputString, cOutputBuffer, configCOMMAND_INT_MAX_OUTPUT_SIZE);
+    	if(pdFALSE == xCommandFound)
+    	{
+    		memcpy(cli_history, pcInputString, MAX_INPUT_LENGTH);
+    	}
         xMoreDataToFollow = FreeRTOS_CLIProcessCommand(pcInputString, cOutputBuffer, configCOMMAND_INT_MAX_OUTPUT_SIZE);
         (void)cliWrite(cOutputBuffer);
     } while (xMoreDataToFollow != pdFALSE);
     (void)cliWrite(cli_prompt);
     *cInputIndex = 0;
     memset((void*)pcInputString, 0x00, MAX_INPUT_LENGTH);
-	LPUART_ClearRxBuff();
+    (void)LPUART_ClearRxBuff();
 }
 
 /*-----------------------------------------------------------*/
