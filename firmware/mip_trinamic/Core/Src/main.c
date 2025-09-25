@@ -83,6 +83,8 @@ void vApplicationIdleHook(void)
 	__WFI();
 }
 
+/*-----------------------------------------------------------*/
+
 int main(void)
 {
 	/* Low Level clock configuration */
@@ -104,7 +106,6 @@ int main(void)
 	(void)SystemClock_GetInfo();
 	/* Peripheral and GPIO Init */
 	(void)TIM16_Init();
-	(void)IPCC_Init();
 	(void)TIM2_Init();
 	(void)I2C1_Init();
 	(void)DAC_Init();
@@ -120,6 +121,8 @@ int main(void)
 	(void)vTaskStartScheduler();
 	for(;;);
 }
+
+/*-----------------------------------------------------------*/
 
 static void SystemClock_GetInfo(void)
 {
@@ -146,6 +149,8 @@ static void SystemClock_GetInfo(void)
     (void)LPUART_TxPolling(buffer);
     (void)LPUART_TxPolling("********************\r\n");
 }
+
+/*-----------------------------------------------------------*/
 
 static void SystemClock_Config(void)
 {

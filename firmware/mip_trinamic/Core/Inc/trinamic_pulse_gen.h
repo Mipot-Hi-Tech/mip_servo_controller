@@ -51,6 +51,18 @@
 /*******************************************************************************
  * API
  ******************************************************************************/
+enum timer_mode_t{
+	TIMER_DISABLED = 0,
+	TIMER_MODE_STEPPER,
+	TIMER_MODE_SERVO,
+};
+
+enum servo_pos_t {
+	SERVO_MODE_DISABLED = 0,
+	SERVO_MODE_1000US_PULSE,
+	SERVO_MODE_1500US_PULSE,
+	SERVO_MODE_2000US_PULSE,
+};
 void TIM2_Init(void);
 
 #endif
